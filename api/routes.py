@@ -1,20 +1,31 @@
-from fastapi import APIRouter
-from orchestrator.coordinator import build_startup_report
+from utils.gemini_client import ask_gemini
 
-router = APIRouter()
+def generate_pitch_deck(idea, report):
 
+    prompt = f"""
+You are a Startup Pitch Deck expert.
 
-@router.post("/generate-report")
-def generate_report(data: dict):
+Create a professional investor pitch deck for:
 
-    idea = data.get("idea")
+Idea: {idea}
 
-    if not idea:
-        return {
-            "status": "error",
-            "message": "Idea is required"
-        }
+Based on this report:
+{report}
 
-    result = build_startup_report(idea)
+Return in this format:
 
-    return result
+1. Problem
+2. Solution
+3. Market Opportunity
+4. Product
+5. Business Model
+6. Competition
+7. Go To Market Strategy
+8. Revenue Projection
+9. Why Now
+10. Closing Slide
+
+Make it crisp, investor-ready, powerful.
+"""
+
+    return ask_gemini(prompt)

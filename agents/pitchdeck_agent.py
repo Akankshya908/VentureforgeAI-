@@ -1,27 +1,31 @@
-from __future__ import annotations
+from utils.gemini_client import ask_gemini
 
-from google import genai
+def generate_pitch_deck(idea, report):
 
-from utils.gemini_client import get_gemini_client
+    prompt = f"""
+You are a Startup Pitch Deck expert.
 
+Create a professional investor pitch deck for:
 
-def generate_pitchdeck(startup_idea: str) -> str:
-    """Generate a pitch deck outline for the startup idea."""
+Idea: {idea}
 
-    client: genai.Client = get_gemini_client()
+Based on this report:
+{report}
 
-    prompt: str = (
-        "You are a pitch deck agent. Create a pitch deck outline for the following startup idea.\n\n"
-        f"Startup idea: {startup_idea}\n\n"
-        "Include slide-by-slide content with:\n"
-        "- Slide title\n"
-        "- Key bullet points\n"
-        "- A short 'speaker note'\n\n"
-        "Cover: problem, solution, market, product, business model, traction assumptions, "
-        "go-to-market, competition, team placeholders, financial highlights placeholders, ask.\n"
-        "Return in a clear numbered list of slides."
-    )
+Return in this format:
 
-    response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
-    return getattr(response, "text", str(response))
+1. Problem
+2. Solution
+3. Market Opportunity
+4. Product
+5. Business Model
+6. Competition
+7. Go To Market Strategy
+8. Revenue Projection
+9. Why Now
+10. Closing Slide
 
+Make it crisp, investor-ready, powerful.
+"""
+
+    return ask_gemini(prompt)
